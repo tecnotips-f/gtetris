@@ -6,8 +6,8 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap'
+  '[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)',
+  '[https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&display=swap](https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&display=swap)'
 ];
 
 // Evento de instalación: guarda los archivos en la caché
@@ -19,7 +19,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Evento de activación: limpia versiones antiguas de la caché
+// Evento de activación: limpia versiones antiguas de la caché (Mantenimiento automático)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
