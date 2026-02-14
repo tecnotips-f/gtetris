@@ -1,426 +1,400 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🌟 Glory Tetris</title>
-    <link rel="manifest" href="manifest.json">
+    <title>👑 Glory Tetris Pro</title>
+<link rel="manifest" href="manifest.json">
      <link rel="apple-touch-icon" href="icon-512.png">
     <meta name="theme-color" content="#020617">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&display=swap');
+        
         body {
-            margin: 0;
-            background-color: #020617;
+            margin: 0; 
+            background-color: #020617; 
             color: white;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', sans-serif; 
             touch-action: none;
-            overflow: hidden;
-            display: flex;
+            overflow: hidden; 
+            display: flex; 
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            padding-top: env(safe-area-inset-top);
-        }
-
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            width: 100%;
-            height: 100%;
+            align-items: center; 
+            height: 100vh; 
+            justify-content: space-between;
         }
 
         #game-container {
-            position: relative;
-            margin-top: 5px;
-            border: 4px solid #334155;
-            border-radius: 20px;
-            box-shadow: 0 0 40px rgba(34, 211, 238, 0.2);
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(10px);
-            max-height: 95vh; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            overflow: hidden;
+            position: relative; 
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 20px; 
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
         }
 
-        canvas#tetris {
-            display: block;
-            background-color: transparent;
-            border-radius: 16px;
-            max-height: 80vh;
-            width: auto;
-        }
-
-        /* Cabecera GLORY */
-        .header-title {
-            font-size: 0.6rem;
-            font-weight: 300;
-            color: #f8fafc;
-            margin-top: 10px;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-            opacity: 0.6;
-        }
-
-        #ui-layer {
+        #game-bg-text {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .msg-box {
-            background: rgba(15, 23, 42, 0.95);
-            padding: 40px 20px 25px 20px;
-            border-radius: 30px;
-            border: 2px solid #eab308;
-            text-align: center;
-            pointer-events: auto;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 0 60px rgba(234, 179, 8, 0.2);
-            width: 90%;
-            max-width: 320px;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-
-        .crown-container {
-            position: absolute;
-            top: -45px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.8));
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-10px); }
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
-            color: #020617;
-            padding: 12px 35px;
-            border-radius: 99px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 15px;
-            border: none;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.03);
+            letter-spacing: 0.5rem;
+            pointer-events: none;
+            z-index: 0;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 20px rgba(234, 179, 8, 0.3);
-            transition: all 0.2s;
         }
 
-        .stats-box {
-            background: rgba(30, 41, 59, 0.6);
+        canvas { 
+            display: block; 
+            max-height: 50vh; 
+            width: auto;
+            border-radius: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ctrl-btn {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 24px; 
+            transition: all 0.1s;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .ctrl-btn:active {
+            background: #ca8a04;
+            transform: scale(0.92);
+        }
+
+        .score-box {
+            background: rgba(30, 41, 59, 0.5);
             padding: 5px 15px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 90px;
         }
 
-        footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            padding: 8px;
-            font-size: 9px;
-            color: #64748b;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            z-index: 50;
+        #ui-overlay {
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(8px);
         }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
-    
-    <!-- Cabecera Glory -->
-    <h1 class="header-title">Glory</h1>
+    <!-- Cabecera Sutil -->
+    <div class="mt-4 opacity-20 tracking-[0.3em] text-[10px] font-bold uppercase">
+        Glory
+    </div>
 
-    <div class="flex gap-4 mb-1 mt-1">
-        <div class="text-center stats-box">
-            <p class="text-[8px] text-yellow-400 uppercase font-black tracking-widest">Puntos</p>
-            <p id="score" class="text-lg font-bold text-white leading-tight">0</p>
+    <!-- Estadísticas Superiores -->
+    <div class="w-full max-w-[320px] flex justify-between px-4 mt-2">
+        <div class="score-box text-center">
+            <p class="text-[10px] uppercase text-slate-500 font-bold tracking-widest">Puntos</p>
+            <p id="score" class="text-xl font-black text-white">0</p>
         </div>
-        <div class="text-center stats-box">
-            <p class="text-[8px] text-pink-400 uppercase font-black tracking-widest">Nivel</p>
-            <p id="level" class="text-lg font-bold text-white leading-tight">1</p>
+        <div class="score-box text-center border border-yellow-500/30">
+            <p class="text-[10px] uppercase text-yellow-500 font-bold tracking-widest">Récord</p>
+            <p id="highscore" class="text-xl font-black text-yellow-500">0</p>
         </div>
     </div>
 
-    <div id="game-container">
+    <!-- Contenedor del Juego -->
+    <div id="game-container" class="mt-2">
+        <div id="game-bg-text">TETRIS</div>
+        
         <canvas id="tetris"></canvas>
-        <div id="ui-layer">
-            
-            <div id="start-msg" class="msg-box">
-                <div class="crown-container">
-                    <svg width="80" height="60" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 70L20 30L40 50L50 10L60 50L80 30L90 70H10Z" fill="#EAB308" stroke="#CA8A04" stroke-width="4"/>
-                        <circle cx="50" cy="10" r="5" fill="#FEF08A"/>
-                        <circle cx="20" cy="30" r="4" fill="#FEF08A"/>
-                        <circle cx="80" cy="30" r="4" fill="#FEF08A"/>
-                    </svg>
-                </div>
-
-                <!-- Título del juego Tetris -->
-                <h2 class="text-3xl font-light mb-1 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent uppercase tracking-[0.2em]">Tetris</h2>
-                <p class="text-slate-400 text-xs mb-4">¿Listo para la victoria?</p>
-                
-                <div class="flex justify-center mb-4 relative">
-                    <div class="w-32 h-32 rounded-3xl bg-slate-800 flex items-center justify-center border-4 border-yellow-500/20 text-4xl shadow-2xl">🕹️</div>
-                </div>
-
-                <button class="btn" onclick="initAudioAndStart()">Jugar ahora</button>
-            </div>
-
-            <div id="game-over-msg" class="msg-box hidden">
-                <h2 class="text-3xl font-black mb-1 text-red-500 italic">¡FIN DEL JUEGO!</h2>
-                <p id="final-score" class="text-white text-2xl font-bold mb-4">0 Puntos</p>
-                <button class="btn" onclick="resetGame()">Reintentar</button>
-            </div>
+        
+        <!-- Pantalla de Inicio / Pausa / Game Over -->
+        <div id="ui-overlay" class="absolute inset-0 flex flex-col items-center justify-center rounded-lg z-20">
+            <h2 id="ui-title" class="text-4xl font-black text-white mb-2 tracking-tighter italic">TETRIS</h2>
+            <p id="ui-subtitle" class="text-slate-400 text-xs mb-6 uppercase tracking-widest">Master Edition</p>
+            <button id="main-btn" class="bg-yellow-500 text-slate-950 px-10 py-4 rounded-full font-black text-xl shadow-lg shadow-yellow-500/20 active:scale-95 transition-all" onclick="startGame()">
+                JUGAR
+            </button>
         </div>
     </div>
 
-    <footer>desarrollado por tecnotic ©</footer>
+    <!-- Controles Táctiles (D-Pad) -->
+    <div class="w-full max-w-[400px] grid grid-cols-3 gap-3 p-6 pb-2">
+        <div></div>
+        <div class="flex gap-2">
+            <button class="ctrl-btn h-16 w-full" onmousedown="playerRotate(1)" ontouchstart="handleTouch(event, () => playerRotate(1))">🔄</button>
+            <button class="ctrl-btn h-16 w-full" onmousedown="togglePause()" ontouchstart="handleTouch(event, () => togglePause())">⏸️</button>
+        </div>
+        <div></div>
+        
+        <button class="ctrl-btn h-16" onmousedown="playerMove(-1)" ontouchstart="handleTouch(event, () => playerMove(-1))">⬅️</button>
+        <button class="ctrl-btn h-16 bg-slate-800" onmousedown="playerDrop()" ontouchstart="handleTouch(event, () => playerDrop())">⬇️</button>
+        <button class="ctrl-btn h-16" onmousedown="playerMove(1)" ontouchstart="handleTouch(event, () => playerMove(1))">➡️</button>
+    </div>
+
+    <!-- Pie de página -->
+    <div class="mb-4 opacity-20 tracking-[0.3em] text-[10px] font-bold uppercase">
+        © Tecnotic
+    </div>
 
     <script>
-        // Registro del Service Worker para funcionamiento Offline
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
-            });
-        }
-
-        const bgCanvas = document.getElementById('bg-canvas');
-        const bgCtx = bgCanvas.getContext('2d');
-        let particles = [];
-        function resizeBg() { bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeBg);
-        resizeBg();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * bgCanvas.width;
-                this.y = Math.random() * bgCanvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
-                this.color = `rgba(234, 179, 8, ${Math.random() * 0.15})`;
-            }
-            update() {
-                this.x += this.speedX; this.y += this.speedY;
-                if (this.x > bgCanvas.width) this.x = 0; if (this.y > bgCanvas.height) this.y = 0;
-            }
-            draw() { bgCtx.fillStyle = this.color; bgCtx.beginPath(); bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2); bgCtx.fill(); }
-        }
-        for (let i = 0; i < 40; i++) particles.push(new Particle());
-        function animateBg() { bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateBg); }
-        animateBg();
-
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playTone(freq, type, duration) {
-            if(audioCtx.state === 'suspended') return;
-            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-            osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + duration);
-        }
-
-        const sounds = {
-            move: () => playTone(200, 'sine', 0.1),
-            rotate: () => playTone(400, 'sine', 0.1),
-            drop: () => playTone(150, 'triangle', 0.1),
-            line: () => playTone(600, 'square', 0.2),
-            gameOver: () => playTone(100, 'sawtooth', 0.5)
-        };
-
         const canvas = document.getElementById('tetris');
         const context = canvas.getContext('2d');
         const scoreElement = document.getElementById('score');
-        const levelElement = document.getElementById('level');
+        const highscoreElement = document.getElementById('highscore');
+
+        const COLS = 10, ROWS = 20, SIZE = 25;
+        canvas.width = COLS * SIZE; 
+        canvas.height = ROWS * SIZE;
+        context.scale(SIZE, SIZE);
+
+        let arena = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+        let player = { pos: {x: 0, y: 0}, matrix: null, score: 0 };
+        let dropCounter = 0;
+        let dropInterval = 1000;
+        let lastTime = 0;
+        let gameActive = false;
+        let isPaused = false;
+
+        let highscore = localStorage.getItem('glory_tetris_highscore') || 0;
+        highscoreElement.innerText = highscore;
+
+        function updateHighScore() {
+            if (player.score > highscore) {
+                highscore = player.score;
+                localStorage.setItem('glory_tetris_highscore', highscore);
+                highscoreElement.innerText = highscore;
+            }
+        }
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        const COLS = 14; 
-        const ROWS = 18; 
-        const BLOCK_SIZE = 22; 
-        
-        canvas.width = COLS * BLOCK_SIZE; 
-        canvas.height = ROWS * BLOCK_SIZE;
-        context.scale(BLOCK_SIZE, BLOCK_SIZE);
+        function playSound(freq, type = 'square', duration = 0.1) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function vibrate(pattern) {
+            if (navigator.vibrate) navigator.vibrate(pattern);
+        }
+
+        function handleTouch(e, callback) {
+            e.preventDefault();
+            callback();
+        }
 
         function createPiece(type) {
-            if (type === 'I') return [[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0]];
-            if (type === 'L') return [[0,2,0],[0,2,0],[0,2,2]];
-            if (type === 'J') return [[0,3,0],[0,3,0],[3,3,0]];
-            if (type === 'O') return [[4,4],[4,4]];
-            if (type === 'Z') return [[5,5,0],[0,5,5],[0,0,0]];
+            if (type === 'T') return [[0,1,0],[1,1,1],[0,0,0]];
+            if (type === 'O') return [[2,2],[2,2]];
+            if (type === 'L') return [[0,0,3],[3,3,3],[0,0,0]];
+            if (type === 'J') return [[4,0,0],[4,4,4],[0,0,0]];
+            if (type === 'I') return [[0,5,0,0],[0,5,0,0],[0,5,0,0],[0,5,0,0]];
             if (type === 'S') return [[0,6,6],[6,6,0],[0,0,0]];
-            if (type === 'T') return [[0,7,0],[7,7,7],[0,0,0]];
-        }
-        const colors = [null, '#22d3ee', '#fb923c', '#818cf8', '#facc15', '#f87171', '#4ade80', '#c084fc'];
-
-        function collide(arena, player) {
-            const [m, o] = [player.matrix, player.pos];
-            for(let y=0; y<m.length; ++y) {
-                for(let x=0; x<m[y].length; ++x) {
-                    if(m[y][x]!==0 && (arena[y+o.y] && arena[y+o.y][x+o.x])!==0) return true;
-                }
-            }
-            return false;
+            if (type === 'Z') return [[7,7,0],[0,7,7],[0,0,0]];
         }
 
-        function createMatrix(w, h) { const matrix = []; while(h--) matrix.push(new Array(w).fill(0)); return matrix; }
-        
+        function draw() {
+            context.clearRect(0, 0, COLS, ROWS);
+            drawMatrix(arena, {x: 0, y: 0});
+            drawMatrix(player.matrix, player.pos);
+        }
+
         function drawMatrix(matrix, offset) {
+            const colors = [null, '#22d3ee', '#facc15', '#f87171', '#fb923c', '#4ade80', '#a78bfa', '#f472b6'];
             matrix.forEach((row, y) => {
                 row.forEach((value, x) => {
                     if (value !== 0) {
                         context.fillStyle = colors[value];
                         context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                        context.lineWidth = 0.05; context.strokeStyle = 'white';
+                        context.lineWidth = 0.05;
+                        context.strokeStyle = 'rgba(255,255,255,0.5)';
                         context.strokeRect(x + offset.x, y + offset.y, 1, 1);
                     }
                 });
             });
         }
 
-        function draw() {
-            context.fillStyle = '#0f172a'; context.fillRect(0,0,canvas.width,canvas.height);
-            drawMatrix(arena, {x:0, y:0});
-            if (player.matrix) drawMatrix(player.matrix, player.pos);
-        }
-
         function merge(arena, player) {
             player.matrix.forEach((row, y) => {
                 row.forEach((value, x) => {
-                    if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
+                    if (value !== 0) {
+                        arena[y + player.pos.y][x + player.pos.x] = value;
+                    }
                 });
             });
+            playSound(150, 'sine', 0.1);
+            vibrate(20);
         }
 
-        function rotate(matrix, dir) {
-            for(let y=0; y<matrix.length; ++y) {
-                for(let x=0; x<y; ++x) [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
+        function collide(arena, player) {
+            const [m, o] = [player.matrix, player.pos];
+            for (let y = 0; y < m.length; ++y) {
+                for (let x = 0; x < m[y].length; ++x) {
+                    if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+                        return true;
+                    }
+                }
             }
-            dir > 0 ? matrix.forEach(row => row.reverse()) : matrix.reverse();
+            return false;
         }
 
         function arenaSweep() {
             let rowCount = 1;
-            outer: for(let y=arena.length-1; y>0; --y) {
-                for(let x=0; x<arena[y].length; ++x) { if(arena[y][x]===0) continue outer; }
+            outer: for (let y = arena.length - 1; y > 0; --y) {
+                for (let x = 0; x < arena[y].length; ++x) {
+                    if (arena[y][x] === 0) continue outer;
+                }
                 const row = arena.splice(y, 1)[0].fill(0);
-                arena.unshift(row); ++y;
-                player.score += rowCount * 10; rowCount *= 2; sounds.line();
+                arena.unshift(row);
+                ++y;
+                player.score += rowCount * 10;
+                rowCount *= 2;
+                playSound(440 + (rowCount * 100), 'triangle', 0.2);
+                vibrate([40, 30, 40]);
             }
+            scoreElement.innerText = player.score;
+            updateHighScore();
         }
 
         function playerDrop() {
+            if (isPaused || !gameActive) return;
             player.pos.y++;
-            if(collide(arena, player)) {
-                player.pos.y--; merge(arena, player); sounds.drop(); playerReset(); arenaSweep(); updateScore();
+            if (collide(arena, player)) {
+                player.pos.y--;
+                merge(arena, player);
+                resetPlayer();
+                arenaSweep();
             }
             dropCounter = 0;
         }
 
         function playerMove(dir) {
+            if (isPaused || !gameActive) return;
             player.pos.x += dir;
-            if(collide(arena, player)) player.pos.x -= dir; else sounds.move();
+            if (collide(arena, player)) {
+                player.pos.x -= dir;
+            } else {
+                playSound(300, 'sine', 0.05);
+                vibrate(10);
+            }
+        }
+
+        function rotate(matrix, dir) {
+            for (let y = 0; y < matrix.length; ++y) {
+                for (let x = 0; x < y; ++x) {
+                    [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
+                }
+            }
+            if (dir > 0) matrix.forEach(row => row.reverse());
+            else matrix.reverse();
         }
 
         function playerRotate(dir) {
-            const pos = player.pos.x; let offset = 1;
+            if (isPaused || !gameActive) return;
+            const pos = player.pos.x;
+            let offset = 1;
             rotate(player.matrix, dir);
-            while(collide(arena, player)) {
+            while (collide(arena, player)) {
                 player.pos.x += offset;
                 offset = -(offset + (offset > 0 ? 1 : -1));
-                if(offset > player.matrix[0].length) { rotate(player.matrix, -dir); player.pos.x = pos; return; }
+                if (offset > player.matrix[0].length) {
+                    rotate(player.matrix, -dir);
+                    player.pos.x = pos;
+                    return;
+                }
             }
-            sounds.rotate();
+            playSound(500, 'sine', 0.05);
+            vibrate(15);
         }
 
-        function playerReset() {
+        function resetPlayer() {
             const pieces = 'ILJOTSZ';
             player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
-            player.pos.y = 0; player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-            if(collide(arena, player)) { 
-                isGameOver = true; 
-                sounds.gameOver(); 
-                document.getElementById('final-score').innerText = player.score + " Puntos";
-                document.getElementById('game-over-msg').classList.remove('hidden'); 
+            player.pos.y = 0;
+            player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
+            
+            if (collide(arena, player)) {
+                gameOver();
             }
         }
 
-        function updateScore() {
-            scoreElement.innerText = player.score;
-            levelElement.innerText = Math.floor(player.score / 100) + 1;
+        function gameOver() {
+            gameActive = false;
+            document.getElementById('ui-title').innerText = "FIN DEL JUEGO";
+            document.getElementById('main-btn').innerText = "REINTENTAR";
+            document.getElementById('ui-overlay').classList.remove('hidden');
+            vibrate([100, 50, 100, 50, 300]);
         }
 
-        function resetGame() {
-            arena.forEach(row => row.fill(0)); player.score = 0; isGameOver = false;
-            document.getElementById('start-msg').classList.add('hidden');
-            document.getElementById('game-over-msg').classList.add('hidden');
-            playerReset(); updateScore(); update();
+        function togglePause() {
+            if (!gameActive) return;
+            isPaused = !isPaused;
+            const overlay = document.getElementById('ui-overlay');
+            const title = document.getElementById('ui-title');
+            const btn = document.getElementById('main-btn');
+
+            if (isPaused) {
+                title.innerText = "PAUSA";
+                btn.innerText = "CONTINUAR";
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+                lastTime = performance.now();
+                update();
+            }
         }
-
-        function initAudioAndStart() { if(audioCtx.state === 'suspended') audioCtx.resume(); resetGame(); }
-
-        let dropCounter = 0; let dropInterval = 1000; let lastTime = 0; let isGameOver = true;
-        const arena = createMatrix(COLS, ROWS);
-        const player = { pos: {x: 0, y: 0}, matrix: null, score: 0 };
 
         function update(time = 0) {
-            if(isGameOver) return;
-            const deltaTime = time - lastTime; lastTime = time;
-            dropCounter += deltaTime; if(dropCounter > dropInterval) playerDrop();
-            draw(); requestAnimationFrame(update);
+            if (!gameActive || isPaused) return;
+            const deltaTime = time - lastTime;
+            lastTime = time;
+            dropCounter += deltaTime;
+            if (dropCounter > dropInterval) playerDrop();
+            draw();
+            requestAnimationFrame(update);
         }
 
-        document.addEventListener('keydown', e => {
-            if(e.keyCode===37) playerMove(-1); else if(e.keyCode===39) playerMove(1);
-            else if(e.keyCode===40) playerDrop(); else if(e.keyCode===38) playerRotate(1);
+        function startGame() {
+            if (isPaused) {
+                togglePause();
+                return;
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            document.getElementById('ui-overlay').classList.add('hidden');
+            arena.forEach(row => row.fill(0));
+            player.score = 0;
+            scoreElement.innerText = 0;
+            gameActive = true;
+            isPaused = false;
+            resetPlayer();
+            lastTime = performance.now();
+            update();
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.keyCode === 37) playerMove(-1);
+            else if (event.keyCode === 39) playerMove(1);
+            else if (event.keyCode === 40) playerDrop();
+            else if (event.keyCode === 38) playerRotate(1);
+            else if (event.keyCode === 80) togglePause(); // Tecla P para pausa
         });
 
-        // Controles táctiles
-        let touchX = 0; let touchY = 0;
-        canvas.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; });
-        canvas.addEventListener('touchmove', e => {
-            if(isGameOver) return; e.preventDefault();
-            const dx = e.touches[0].clientX - touchX; const dy = e.touches[0].clientY - touchY;
-            if(Math.abs(dx) > 30) { playerMove(dx > 0 ? 1 : -1); touchX = e.touches[0].clientX; }
-            if(dy > 40) { playerDrop(); touchY = e.touches[0].clientY; }
-        }, {passive: false});
-        canvas.addEventListener('touchend', e => {
-            const dx = e.changedTouches[0].clientX - touchX; const dy = e.changedTouches[0].clientY - touchY;
-            if(Math.abs(dx) < 10 && Math.abs(dy) < 10) playerRotate(1);
-        });
-
-        draw();
     </script>
 </body>
 </html>
