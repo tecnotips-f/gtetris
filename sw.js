@@ -1,6 +1,6 @@
 // Nombre de la memoria caché
-const CACHE_NAME = 'glory-tetris-v1';
-
+const CACHE_NAME = 'glory-tetris-v3';
+const CACHE_VERSION = '3.0.0';
 // Lista de archivos necesarios para que el juego funcione offline
 const ASSETS = [
   './',
